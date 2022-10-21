@@ -163,6 +163,14 @@ License: For each use you must have a valid license purchased only from above li
                                     <span class="menu-title">Cases</span>
                                 </a>
                             </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?php echo _route('case:peopleSearch')?>">
+                                    <i class="link-icon" data-feather="box"></i>
+                                    <span class="menu-title">Case Search</span>
+                                </a>
+                            </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link" href="<?php echo _route('category:index')?>">
                                     <i class="link-icon" data-feather="box"></i>

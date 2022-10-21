@@ -77,6 +77,7 @@
 
 		public function checkbox($name , $value = null, $attributes = null)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
 
 			return <<<EOF
@@ -86,8 +87,8 @@
 
 		public function small($html , $attributes = NULL)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
-
 
 			$html = ucwords($html);
 
@@ -110,6 +111,7 @@
 
 		public function text($name , $inputValue = null , $attributes = null)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
 			$value = is_null(\FormInput::get($name)) ? $inputValue : \FormInput::get($name);
 
@@ -122,6 +124,7 @@
 
 		public function email($name , $value = null , $attributes = null)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
 
 			$value = is_null(\FormInput::get($name)) ? $value : \FormInput::get($name);
@@ -133,8 +136,8 @@
 
 		public function password($name , $value = null , $attributes = null , $preservePassword = false)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
-
 			$value = is_null(\FormInput::get($name)) ? $value : \FormInput::get($name);
 
 
@@ -149,6 +152,7 @@
 
 		public function number($name , $value = null , $attributes = null)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
 
 			$value = is_null(\FormInput::get($name)) ? $value : \FormInput::get($name);
@@ -162,6 +166,7 @@
 
 		public function date($name , $value , $attributes = null)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
 
 			$value = is_null(\FormInput::get($name)) ? $value : \FormInput::get($name);
@@ -174,6 +179,7 @@
 
 		public function time($name , $value , $attributes = null)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
 
 			$value = is_null(\FormInput::get($name)) ? $value : \FormInput::get($name);
@@ -187,6 +193,7 @@
 
 		public function textarea($name , $value = null , $attributes = null)
 		{
+			$attributes['autocomplete'] = 'off';
 			$attributes = is_null($attributes) ? $attributes : keypairtostr($attributes);
 
 			$value = is_null(\FormInput::get($name)) ? $value : \FormInput::get($name);

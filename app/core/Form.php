@@ -218,6 +218,7 @@
 			if( isset($attributes['input']) )
 				$item = $this->overwriteParams($item , $attributes['input']);
 
+
 			return $item;
 		}
 
@@ -235,16 +236,17 @@
 		public function get($name , $attributes = [])
 		{	
 			$item = $this->getRaw($name);
-
 			/*
 			*so we can overwrite the input attrivutes
 			*temporary to strictly apply required atrribute
 			*/
-			if( empty($attributes) )
+			if(empty($attributes))
 				$attributes = $item['attributes'];
 
 			$item = $this->overwriteParams($item , $attributes);
-			switch( $item['type'] )
+
+			
+			switch($item['type'])
 			{
 				case 'text':
 				case 'email':
@@ -282,9 +284,11 @@
 			if( !isEqual($item['type']  , ['hidden' , 'submit']) && !isset($item['label'])){
 				echo die("Cannot create Column {$name} , No Label specified");
 			}
-
+			
 			$form_label = $this->_form->label($item['label'] , $item['attributes']['id'] ?? '#');
 			$form_input = $this->get($name ,$attributes);
+
+
 			return <<<EOF
 				<div> 
 					{$form_label}

@@ -87,6 +87,13 @@
 	
 	$controller = '/CaseController';
 	$routes['case'] = _singleBasicRoute($controller);
+	$routes['case']['addPeople'] = $controller.'/addPeople';
+	$routes['case']['showPeople'] = $controller.'/showPerson';
+	$routes['case']['editPeople'] = $controller.'/editPeople';
+	$routes['case']['peopleSearch'] = $controller.'/peopleSearch';
+
+	
+
 	return $routes;
 
 

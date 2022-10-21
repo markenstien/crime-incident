@@ -194,8 +194,8 @@
 				'options' => [
 					'label' => 'User Type',
 					'option_values' => [
-						UserService::SUPERVISOR,
-						UserService::STAFF
+						UserService::ADMIN,
+						UserService::SUPERVISOR
 					]
 				],
 				'attributes' => [
