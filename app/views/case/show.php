@@ -42,12 +42,23 @@
                                 <td><?php echo $case->incident_time?>(Military Time)</td>
                             </tr>
                             <tr>
+                                <td>Station</td>
+                                <td><?php echo $case->station_name?></td>
+                            </tr>
+                            <tr>
                                 <td>Barangay</td>
                                 <td><?php echo $case->barangay?></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><?php echo wLinkDefault(_route('case:edit', $case->id), 'Edit Case')?></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+            </section>
+
+            <section>
+            <div id="myMap" style="width: 500px; height:500px"></div>
             </section>
 
             <section>
@@ -134,4 +145,37 @@
         </div>
     </div>
 <?php endbuild()?>
+
+<?php build('scripts')?>
+<!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBECPs4r98OarC3M5j6BAE8foUEFVBWEao&callback=initMap&v=weekly"
+      defer
+    ></script>
+
+    <script defer>
+        let map;
+        function initMap() {
+            let myLatLng = { lat: <?php echo $case->lat?>, lng: <?php echo $case->lng?> };
+            map = new google.maps.Map(document.getElementById("myMap"), {
+                center: myLatLng,
+                zoom: 15,
+            });
+
+            new google.maps.Marker({
+                position: myLatLng,
+                map,
+                title : 'testing'
+            });
+        }
+        window.initMap = initMap;
+    </script>
+<?php endbuild()?>
+
+
 <?php loadTo()?>

@@ -34,12 +34,10 @@
 		{
 			$user_id = $id;
 			$fillable_datas = $this->getFillablesOnly($user_data);
-			$validated = $this->validate($fillable_datas, $id);
-
 			if(!is_null($id))
 			{
 				//change password also
-				if( empty($fillable_datas['password']) )
+				if(empty($fillable_datas['password']) )
 					unset($fillable_datas['password']);
 				$res = parent::update($fillable_datas , $id);
 				if( isset($user_data['profile']) ){
@@ -48,11 +46,8 @@
 				$user_id = $id;
 			}else
 			{
-				$password = random_letter(6);
-				// $fillable_datas['user_code'] = $this->generateCode($user_data['user_type']);
-				$fillable_datas['password'] = $password;
+				$fillable_datas['password'] = $user_data['password'];
 				$user_id = parent::store($fillable_datas);
-				// $this->sendCredential($user_id);
 			}
 			
 			return $user_id;
@@ -229,14 +224,13 @@
 		}
 
 
-		public function authenticate($email , $password)
+		public function authenticate($username , $password)
 		{
 			$errors = [];
-
-			$user = parent::single(['email' => $email]);
-
+			$user = parent::single(['username' => $username]);
+			
 			if(!$user) {
-				$errors[] = " Email '{$email}' does not exists in any account";
+				$errors[] = " Username '{$username}' does not exists in any account";
 			}
 
 			if(!isEqual($user->password ?? '' , $password)){
@@ -247,7 +241,6 @@
 				$this->addError( implode(',', $errors));
 				return false;
 			}
-
 			return $this->startAuth($user->id);
 		}
 

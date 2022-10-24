@@ -1,13 +1,3 @@
-cases_people
-firstname
-lastname
-injury
-is_dead
-phone
-gender
-people_type
-case_id
-
 drop table if exists cases_people;
 create table cases_people(
     id int(10) not null PRIMARY KEY AUTO_INCREMENT,
@@ -21,3 +11,4 @@ create table cases_people(
     age smallint,
     people_type enum('VICTIM','SUSPECT')
 );
+

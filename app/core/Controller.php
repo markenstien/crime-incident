@@ -1,8 +1,10 @@
 <?php
 	use Form\AttachmentForm;
 	use Form\FormCommon;
+	use Services\UserService;
 
 	load(['AttachmentForm','FormCommon'] , APPROOT.DS.'form');
+	load(['UserService'], SERVICES);
 	class Controller
 	{	
 
@@ -24,7 +26,7 @@
 			$this->data['whoIs'] = whoIs();
 			$this->data['_formCommon'] = $this->_formCommon;
 			$user = whoIs(); 
-			if($user && isEqual($user->user_type , 'admin'))
+			if($user && isEqual($user->user_type , UserService::ADMIN))
 				$this->is_admin = true;
 		}
 

@@ -21,3 +21,6 @@ create table cases(
     remarks text,
     created_at timestamp DEFAULT now()
 );
+
+alter table cases
+    add column station_id int(10) not null;

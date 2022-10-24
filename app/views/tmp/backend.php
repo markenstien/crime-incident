@@ -8,6 +8,10 @@ Portfolio: https://themeforest.net/user/nobleui/portfolio
 Contact: nobleui123@gmail.com
 License: For each use you must have a valid license purchased only from above link in order to legally use the theme for your project.
 -->
+<?php
+  use Services\UserService;
+  load(['UserService'],SERVICES);
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -151,12 +155,14 @@ License: For each use you must have a valid license purchased only from above li
                                     <span class="menu-title">Dashboard</span>
                                 </a>
                             </li>
+                            <?php if(isEqual($auth->user_type, UserService::ADMIN)) :?>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?php echo _route('station:index')?>">
                                     <i class="link-icon" data-feather="box"></i>
                                     <span class="menu-title">Stations</span>
                                 </a>
                             </li>
+                            <?php endif?>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?php echo _route('case:index')?>">
                                     <i class="link-icon" data-feather="box"></i>

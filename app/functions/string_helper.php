@@ -34,6 +34,10 @@
         return $mobile;
     }
 
+    function str_to_number($string) {
+        return preg_replace("/[^0-9.]/", "", trim($string));
+    }
+
 
     function is_mobile_number($string)
     {

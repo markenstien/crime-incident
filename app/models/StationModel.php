@@ -39,4 +39,8 @@ use Services\UserService;
 
             return $stationId;
         }
+
+        public function getAll($params = []) {
+            return parent::all($params['where'] ?? null,$params['order'] ?? null);
+        }
     }

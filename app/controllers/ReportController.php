@@ -1,21 +1,15 @@
 <?php
-
-	use Classes\Report\SalesReport;
-	use Services\StockService;
-
-	load(['SalesReport'],CLASSES.DS.'Report');
-	load(['StockService'],SERVICES);
-
 	class ReportController extends Controller
 	{
 
 		public function __construct()
 		{
 			parent::__construct();
-			$this->orderItemModel = model('OrderItemModel');
-			$this->orderModel = model('OrderModel');
 			$this->userModel = model('UserModel');
-			$this->stockModel = model('StockModel');
+		}
+
+		public function create(){
+			return $this->view('tmp/maintenance');
 		}
 
 		public function salesReport() {

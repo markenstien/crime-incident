@@ -79,7 +79,7 @@
                                         <td><?php echo $row->reference?></td>
                                         <td><?php echo $row->crime_type?></td>
                                         <td><?php echo $row->incident_date?></td>
-                                        <td><?php echo wLinkDefault(_route('case:show', $row->case_id))?></td>
+                                        <td><?php echo wLinkDefault(_route('case:show', $row->case_id), 'Show')?></td>
                                     </tr>
                                 <?php endforeach?>
                             </tbody>

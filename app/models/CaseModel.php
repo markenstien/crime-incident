@@ -14,6 +14,9 @@ load(['CategoryService'],SERVICES);
             'incident_time',
             'crime_type_id',
             'barangay_id',
+            'station_id',
+            'lat',
+            'lng'
         ];
 
         public function __construct()
@@ -28,6 +31,9 @@ load(['CategoryService'],SERVICES);
             if(is_null($id)) {
                 $platformData['_token'] = 'reference';
             }
+            $platformData['lng'] = str_to_number($platformData['lng']);
+            $platformData['lat'] = str_to_number($platformData['lat']);
+            
             return parent::createOrUpdate($platformData,$id);
         }
 
@@ -40,22 +46,30 @@ load(['CategoryService'],SERVICES);
 
         public function getAll($params = []) {
             $where = null;
-
+            $order = null;
             if (isset($params['where'])) {
                 $where = " WHERE ".parent::conditionConvert($params['where']);
             }
-             
+
+            if(isset($params['order'])) {
+                $order = " ORDER BY ".$params['order'];
+            }
+
             $this->db->query(
                 "SELECT cases.*, cat_crime.name as crime_type, 
                     cases.id as case_id,
-                    cat_brgy.name as barangay 
+                    cat_brgy.name as barangay,
+                    station.name as station_name
                     FROM {$this->table}
                     LEFT JOIN categories as cat_crime
                     on cat_crime.id = cases.crime_type_id
+
                     LEFT JOIN categories as cat_brgy
                     on cat_brgy.id = cases.barangay_id
-                    
-                    {$where}"
+
+                    LEFT JOIN stations as station
+                    on station.id = cases.station_id
+                    {$where} {$order}"
             );
 
             return $this->db->resultSet();
@@ -93,6 +107,7 @@ load(['CategoryService'],SERVICES);
         }
 
         public function getByPeopleFirst($params = []) {
+            $where = $params['where'] ?? [];
             return $this->peopleModel->getPeople($params);
         }
 

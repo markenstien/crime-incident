@@ -5,6 +5,7 @@
 	{
 		public function __construct()
 		{
+			parent::__construct();
 			$this->user_model = model('UserModel');
 		}
 

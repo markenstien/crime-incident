@@ -3,9 +3,10 @@
     namespace Form;
     use Core\Form;
     use Services\CategoryService;
+use Services\UserService;
 
     load(['Form'], CORE);
-    load(['CategoryService'], SERVICES);
+    load(['CategoryService', 'UserService'], SERVICES);
 
     class CaseForm extends Form {
 
@@ -13,12 +14,17 @@
         {
             parent::__construct();
             $this->categoryModel = model('CategoryModel');
+            $this->stationModel = model('StationModel');
 
             $this->addTitle();
+            $this->addStation();
             $this->addIncidentDate();
             $this->addIncidentTime();
             $this->addCrimeType();
             $this->addBarangayId();
+            $this->addLat();
+            $this->addLng();
+            // $this->addLandMark();
         }
         public function addTitle() {
             $this->add([
@@ -76,7 +82,8 @@
         public function addBarangayId() {
 
             $options = $this->categoryModel->all([
-                'category' => CategoryService::BARANGAY_TYPE
+                'category' => CategoryService::BARANGAY_TYPE,
+                'active' => true
             ]);
             $options = arr_layout_keypair($options,['id','name']);
             
@@ -89,6 +96,83 @@
                 ],
                 'class' => 'form-control',
                 'required' => true
+            ]);
+        }
+
+        public function addStation() {
+            $value = null;
+            if(isEqual(whoIs('user_type'), UserService::ADMIN)) {
+                $options = $this->stationModel->getAll();
+            }else{
+                $stationId =  whoIs('station_id');
+                $options = $this->stationModel->getAll([
+                    'where' => [
+                        'id' =>$stationId
+                    ]
+                ]);
+
+                $value = $stationId;
+            }
+            $options = arr_layout_keypair($options,['id','name']);
+
+            $inputParam = [
+                'name' => 'station_id',
+                'type' => 'select',
+                'options' => [
+                    'label' => 'Stations',
+                    'option_values' => $options
+                ],
+                'class' => 'form-control',
+                'required' => true
+            ];
+
+            if(!is_null($value)) {
+                $inputParam['value'] = $value;
+                $inputParam['attributes'] = [
+                    'readonly' => true,
+                ];
+            }
+
+            $this->add($inputParam);
+        }
+
+
+        public function addLat() {
+            $this->add([
+                'name' => 'lat',
+                'type' => 'text',
+                'options' => [
+                    'label' => 'Latitude'
+                ],
+                'class' => 'form-control',
+                'required' => true
+            ]);
+        }
+
+        public function addLng() {
+            $this->add([
+                'name' => 'lng',
+                'type' => 'text',
+                'options' => [
+                    'label' => 'Longitude',
+                ],
+                'class' => 'form-control',
+                'required' => true
+            ]);
+        }
+
+        public function addLandMark() {
+            $this->add([
+                'name' => 'landmark',
+                'type' => 'text',
+                'options' => [
+                    'label' => 'Land Mark'
+                ],
+                'class' => 'form-control',
+                'required' => true,
+                'attributes' => [
+                    'placeholder' => 'Eg. Sm Bicutan'
+                ]
             ]);
         }
     }

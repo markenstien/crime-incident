@@ -20,7 +20,21 @@ load(['UserService', 'CategoryService'], SERVICES);
         }
 
         public function index() {
-            $this->data['cases'] = $this->model->getAll();
+            
+            if (!$this->is_admin) {
+                $this->data['cases'] = $this->model->getAll([
+                    'where' => [
+                        'station_id' => $this->data['whoIs']->station_id
+                    ],
+                    'order' => 'cases.incident_date desc'
+                ]);
+            } else {
+                $this->data['cases'] = $this->model->getAll([
+                    'order' => 'cases.incident_date desc'
+                ]);
+                
+            }
+            
             return $this->view('case/index', $this->data);
         }
 
@@ -64,6 +78,27 @@ load(['UserService', 'CategoryService'], SERVICES);
             $this->data['peopleArray'] = $peopleArray;
 
             return $this->view('case/show', $this->data);
+        }
+
+        public function edit($id) {
+            $req = request()->inputs();
+            $this->data['title'] = 'Edit Case';
+            if(isSubmitted()) {
+                $res = $this->model->createOrUpdate($req, $req['id']);
+                if(!$res) {
+                    Flash::Set($this->model->getErrorString(), 'danger');
+                    return request()->return();
+                }
+
+                Flash::set($this->model->getMessageString());
+                return redirect(_route('case:show', $res));
+            }
+            $case = $this->model->get($id);
+            $this->data['case'] = $case;
+            $this->data['_form']->setValueObject($case);
+            $this->data['_form']->addId($case->id);
+
+            return $this->view('case/edit', $this->data);
         }
 
         public function addPeople($caseId) {
@@ -128,7 +163,8 @@ load(['UserService', 'CategoryService'], SERVICES);
                         ],
                         'barangay_id' => $_GET['barangay_id'],
                         'crime_type_id' => $_GET['crime_type_id']
-                    ]
+                    ],
+                    'order' => 'cases.incident_date asc, cases.title asc'
                 ]);
             } elseif(isset($_GET['keyword_search'])) {
                 $keyword = $_GET['keyword'];
@@ -137,24 +173,35 @@ load(['UserService', 'CategoryService'], SERVICES);
                     return request()->return();
                 }
 
-                $this->data['cases'] = $this->model->getByPeopleFirst([
-                    'where' => [
-                        'cases.title' => [
-                            'condition' => 'like',
-                            'value' => "%{$keyword}%",
-                            'concatinator' => 'OR'
-                        ],
-                        'people.firstname' => [
-                            'condition' => 'like',
-                            'value' => "%{$keyword}%",
-                            'concatinator' => 'OR'
-                        ],
-                        'people.lastname' => [
-                            'condition' => 'like',
-                            'value' => "%{$keyword}%",
-                            'concatinator' => 'OR'
-                        ],
+                $conditions = [
+                    'cases.title' => [
+                        'condition' => 'like',
+                        'value' => "%{$keyword}%",
+                        'concatinator' => 'OR'
+                    ],
+                    'people.firstname' => [
+                        'condition' => 'like',
+                        'value' => "%{$keyword}%",
+                        'concatinator' => 'OR'
+                    ],
+                    'people.lastname' => [
+                        'condition' => 'like',
+                        'value' => "%{$keyword}%",
+                        'concatinator' => 'OR'
+                    ],
+                    'cases.reference' => [
+                        'condition' => 'like',
+                        'value' => "%{$keyword}%",
+                        'concatinator' => 'AND'
                     ]
+                ];
+
+                if(!$this->is_admin) {
+                    $conditions['cases.station_id'] = $this->data['whoIs']->station_id;
+                }
+
+                $this->data['cases'] = $this->model->getByPeopleFirst([
+                    'where' => $conditions
                 ]);
             }
 
