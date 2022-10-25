@@ -1,7 +1,7 @@
 <?php build('content') ?>
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Record New Incident</h4>
+            <h4 class="card-title">Edit New Incident</h4>
             <?php echo wLinkDefault(_route('case:index'), 'Cases')?>
         </div>
 
@@ -9,12 +9,8 @@
             <?php echo $_form->start()?>
             <?php echo $_form->getFormItems()?>
 
-            <section id="mapDiv" style="margin:0px auto;">
-                <h4>Point Location here.</h4>
-                <div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" 
-                src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" 
-                frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-                <a href="https://123movies-to.org"></a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net">google maps for websites</a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
+            <section>
+                <div id="myMap" style="width: 500px; height:500px"></div>
             </section>
 
             <?php echo wDivider(15)?>
@@ -25,4 +21,37 @@
         </div>
     </div>
 <?php endbuild()?>
+
+<?php build('scripts')?>
+<!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBECPs4r98OarC3M5j6BAE8foUEFVBWEao&callback=initMap&v=weekly"
+      defer
+    ></script>
+
+    <script defer>
+        let map;
+        function initMap() {
+            let myLatLng = { lat: <?php echo $case->lat?>, lng: <?php echo $case->lng?> };
+            map = new google.maps.Map(document.getElementById("myMap"), {
+                center: myLatLng,
+                zoom: 15,
+            });
+
+            new google.maps.Marker({
+                position: myLatLng,
+                map,
+                title : "<?php echo $case->title?>"
+            });
+        }
+        window.initMap = initMap;
+    </script>
+<?php endbuild()?>
+
+
 <?php loadTo()?>

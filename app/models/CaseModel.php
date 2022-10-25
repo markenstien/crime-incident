@@ -58,8 +58,10 @@ load(['CategoryService'],SERVICES);
             $this->db->query(
                 "SELECT cases.*, cat_crime.name as crime_type, 
                     cases.id as case_id,
+                    round(((cases.lat + cases.lng + (200/3.14)) * 3.14) , 3) as case_radius,
                     cat_brgy.name as barangay,
                     station.name as station_name
+                    
                     FROM {$this->table}
                     LEFT JOIN categories as cat_crime
                     on cat_crime.id = cases.crime_type_id

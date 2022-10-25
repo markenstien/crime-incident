@@ -58,7 +58,7 @@
             </section>
 
             <section>
-            <div id="myMap" style="width: 500px; height:500px"></div>
+                <div id="myMap" style="width: 500px; height:500px"></div>
             </section>
 
             <section>
@@ -167,10 +167,17 @@
                 zoom: 15,
             });
 
-            new google.maps.Marker({
+            var marker = new google.maps.Marker({
                 position: myLatLng,
-                map,
-                title : 'testing'
+                map
+            });
+
+            var infoWindow = new google.maps.InfoWindow({
+                content : '<h1><?php echo $case->title?></h1>'
+            });
+
+            marker.addListener('click' , function(){
+                infoWindow.open(map, marker);
             });
         }
         window.initMap = initMap;
