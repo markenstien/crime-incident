@@ -6,20 +6,33 @@
     class ReportService {
         private $caseModel;
         private $cases;
+
+        public $errors = [];
         public function __construct($caseModel)
         {
             $this->caseModel = $caseModel;
         }
-        public function generate($startDate, $endDate, $stationId = null, $crimeTypes = [], $barangayId = null) {
-            $cases = $this->caseModel->getAll([
-                'where' => [
-                    'incident_date' => [
-                        'condition' => 'between',
-                        'value' => [
-                            $startDate, $endDate
-                        ]
+        public function generate($startDate, $endDate, $stationId = null, $barangayId = null, $crimeTypes = []) {
+
+            $condition = [
+                'incident_date' => [
+                    'condition' => 'between',
+                    'value' => [
+                        $startDate, $endDate
                     ]
-                ],
+                ]
+            ];
+
+            if (!is_null($stationId) && !empty($stationId)) {
+                $condition['station_id'] = $stationId;
+            }
+
+            if (!is_null($barangayId) && !empty($barangayId)) {
+                $condition['barangay_id'] = $barangayId;
+            }
+
+            $cases = $this->caseModel->getAll([
+                'where' => $condition,
                 'order' => 'incident_date desc'
             ]);
 
@@ -207,5 +220,87 @@
             }
             
             return $retVal;
+        }
+
+        public function filterByTime($cases, $startTime,$endTime) {
+            $error = '';
+            $retVal = [];
+            if (empty($startTime)) {
+                $error = "Start Time must not be empty.";
+            }
+
+            if (empty($endTime)) {
+                $error = "End Time must not be empty.";
+            }
+
+            if(!empty($error)) {
+                $this->errors[] = $error;
+                return false;
+            }
+
+            $timeStartTime = strtotime($startTime);
+            $timeEndTime = strtotime($endTime);
+            foreach($cases as $key => $row) {
+                $time = strtotime($row->incident_time);
+                if ($time >= $timeStartTime && $time <= $timeEndTime) {
+                    $retVal[] = $row;
+                }
+            }
+            return $retVal;
+        }
+
+
+        public function groupByTime($cases) {
+            
+            $timeSets = [
+                '6:00am' => [
+                    'label' => '6:00am To 12:00pm',
+                    'items' => [],
+                    'total' => 0
+                ],
+                '12:00pm' => [
+                    'label' => '12:00pm To 6:00pm',
+                    'items' => [],
+                    'total' => 0
+                ],
+                '6:00pm'=> [
+                    'label' => '6:00pm To 12:00am',
+                    'items' => [],
+                    'total' => 0
+                ],
+                '12:00am' => [
+                    'label' => '12:00am To 3:00am',
+                    'items' => [],
+                    'total' => 0
+                ],
+                '3:00am' => [
+                    'label' => '3:00am To 6:00am',
+                    'items' => [],
+                    'total' => 0
+                ]
+            ];
+
+            foreach($cases as $key => $row) {
+                $time = strtotime($row->incident_time);
+
+                if($time >= strtotime('6:00am') && $time <= strtotime('12:00pm')) {
+                    $timeSets['6:00am']['items'][] = $row;
+                }elseif($time >= strtotime('12:00pm') && $time <= strtotime('6:00pm')) {
+                    $timeSets['12:00pm']['items'][] = $row;
+                }elseif($time >= strtotime('6:00pm') && $time <= strtotime('12:00am')) {
+                    $timeSets['6:00pm']['items'][] = $row;
+                }elseif($time >= strtotime('12:00am') && $time <= strtotime('3:00am')) {
+                    $timeSets['12:00am']['items'][] = $row;
+                }elseif($time >= strtotime('3:00am') && $time <= strtotime('6:00am')) {
+                    $timeSets['3:00am']['items'][] = $row;
+                }
+            }
+
+            foreach($timeSets as $key => $row) {
+                $timeSets[$key]['total'] = count($row['items']);
+            }
+            
+
+            return $timeSets;
         }
     } 

@@ -48,6 +48,7 @@ License: For each use you must have a valid license purchased only from above li
 
 <link rel="shortcut icon" href="<?php echo _path_tmp('assets/images/favicon.png')?>" />
 
+  <?php produce('headers')?>
   <?php produce('styles')?>
   
 </head>
@@ -216,6 +217,7 @@ License: For each use you must have a valid license purchased only from above li
     <script src="<?php echo _path_tmp('assets/vendors/core/core.js')?>"></script>
     <script src="<?php echo _path_public('js/core.js')?>"></script>
     <script src="<?php echo _path_public('js/global.js')?>"></script>
+    <script src="<?php echo _path_public('js/constants.js')?>"></script>
     <?php produce('scripts')?>
     <!-- endinject -->
 

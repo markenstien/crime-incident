@@ -41,6 +41,7 @@ load(['UserService', 'CategoryService'], SERVICES);
         public function create() {
             $req = request()->inputs();
             $this->data['title'] = 'Record New Case';
+            
             if(isSubmitted()) {
                 $res = $this->model->createOrUpdate($req);
                 if(!$res) {

@@ -1,8 +1,10 @@
-<?php 
+<?php
 	namespace Core;
+
 	load(['FormBuilder'], CORE);
 
-	class Form {
+	class Form
+	{
 
 		protected $_type = 'crud';
 		protected $_form = null;
@@ -13,84 +15,159 @@
 		protected $_items = [];
 		protected $name = 'CORE_FORM';
 
+
 		public function __construct()
 		{
-			$this->_form = new FormBuilder();	
+			$this->_form = new FormBuilder();
 		}
 
-		/**
-		 * initiats form basic feature
-		 */
-		public function init($params = []) {
-			$form_param = [];
+        //done
+		public function init($params = [])
+		{
+		    $form_param = [];
+
 			$form_param['method'] = strtoupper($params['method'] ?? $this->_method);
 			$form_param['url'] = $params['url'] ?? $this->_url;
 			$form_param['enctype'] = 'multipart/form-data';
 
-			if(isset($params['attributes']) )
-				$form_param = array_merge($form_param , $params['attributes']);
+
+			if( isset($params['attributes']) )
+				$form_param = array_merge( $form_param , $params['attributes']);
 
 			$this->_form_param = $form_param;
+
+		}
+        //done
+		public function start()
+		{
+			return $this->_form->open( $this->_form_param );
+		}
+        //done
+		public function end()
+		{
+			return $this->_form->close();
+		}
+        //done
+		public function remove($name)
+		{
+			$items = $this->_items;
+
+			foreach( $items as $key => $item )
+			{
+				if( $item['name'] == $name ){
+					unset($items[$key]);
+				}
+			}
+
+			$this->_items = $items;
+		}
+        //done
+		public function addAndCall($params = [])
+		{
+			$this->add($params);
+			return $this->get($params['name']);
 		}
 
-		public function add($params = []) {
+        //done
+		public function addDescription() {
+			$this->add([
+				'type' => 'textarea',
+				'name' => 'description',
+				'options' => [
+					'label' => 'Description',
+					'rows' => 3
+				],
+				'class' => 'form-control',
+				'required' => true
+			]);
+        }
+        //done
+        public function addAddressText() {
+			$this->add([
+				'type' => 'textarea',
+				'name' => 'address',
+				'options' => [
+					'label' => 'Address',
+					'rows' => 3
+				],
+				'class' => 'form-control',
+				'required' => true
+			]);
+        }
+        //done
+		public function add($params = [])
+		{
 			$type = strtolower(trim($params['type']));
 			$name = $params['name'];
 			$value = $params['value'] ?? '';
-			$preserve = $params['preserve'] ?? false;
-			/**ORIGNAL LABEL DO NOT TOUCH */
-			$label_original  = $params['options']['label'] ?? '';
-			/**APPEND LABEL DESIGN */
-			$label   = $label_original;
-			$attributes = $this->mergeInputAttributes($params);
+			$classAndAddtributes = $this->mergeAddtributeAndClass($params);
 			$option_values = $params['options']['option_values'] ?? [];
+
+			//for password only
+			$preserve = $params['preserve'] ?? false;
+			$label_original  = $params['options']['label'] ?? '';
+			$label   = $label_original;
 
 			$item = [
 				'name' => $name,
 				'type' => $type,
 				'value' => $value,
-				'attributes' => $attributes,
+				'attributes' => $classAndAddtributes,
 				'option_values' => $option_values,
 				'preserve' => $preserve
 			];
 
 			if(isset($params['required']) && ($params['required'] == true)) {
-				if(isset($params['options']['label'])){
-					$label .= "<span style='color:red;'>*</span>";
+				if( $params['required'] === FALSE) 
+				{
+					unset($params['required']);
+				}else
+				{
+					$item['attributes']['required'] = true;
+					if(isset($params['options']['label'])){
+						$label .= "<span style='color:red;'>*</span>";
+					}
+					$item['required'] = TRUE;
 				}
-				$item['required'] = TRUE;
 			}
 
 			$item['label'] = $label;
 			$item['label_original']  = $label_original;
 
-			$item = $this->validateItemData($item);
+
 			$this->_items[$name] = $item;
-		} 
+		}
+        //done
+		public function getRaw($name , $attributes = [])
+		{
+			$item = $this->_items[$name] ?? false;
 
-		public function getLabel($name) {
-			if($this->checkExistKey($name)) {
-				$item = $this->getItem($name);
-				return [
-					$item['label'],
-					$item['label_original'],
-				];
+			if(!$item){
+				echo die("Form $this->name input {$name} does not exists!!");
+				return false;
 			}
+
+			$item = $this->overwriteParams($item , $attributes);
+			return $item;
 		}
 
-		public function label($name)
-		{
-			$item = $this->getRaw($name);
-			$form_label = $this->_form->label($item['label'] , $item['attributes']['id'] ?? '#');
-			return $form_label;
-		}
+        /*
+		*done
+		*/
+		public function get($name , $attributes = [])
+		{	
+			$item = $this->getRaw($name, $attributes);
+			/*
+			*so we can overwrite the input attrivutes
+			*temporary to strictly apply required atrribute
+			*/
+			if(empty($attributes))
+				$attributes = $item['attributes'];
 
-		public function get($name, $inputOption = []) 
-		{
-			$rawItem = $this->getRaw($name, $inputOption);
-			$this->rawItem = $rawItem;
+			$item = $this->overwriteParams($item , $attributes);
 
-			switch($rawItem['type'])
+			
+			switch($item['type'])
 			{
 				case 'text':
 				case 'email':
@@ -102,38 +179,40 @@
 				case 'number':
 				case 'date':
 				case 'time':
-					return $this->_form->call( $rawItem['type'] , $rawItem['name'], $rawItem['value'] , $rawItem['attributes'] );
+					return $this->_form->call( $item['type'] , $item['name'], $item['value'] , $item['attributes'] );
 				break;
 
 				case 'password':
-					return $this->_form->password($rawItem['name'], $rawItem['value'] , $rawItem['attributes'] , $rawItem['preserve']);
+					return $this->_form->password($item['name'], $item['value'] , $item['attributes'] , $item['preserve']);
 				break;
 
 				case 'file':
-					return $this->_form->file($rawItem['name'], $rawItem['attributes']);
+					return $this->_form->file($item['name'], $item['attributes']);
 				break;
 
 				case 'select':
-					return $this->_form->select($rawItem['name'] , $rawItem['option_values'] , $rawItem['value'] , $rawItem['attributes']);
+					return $this->_form->select($item['name'] , $item['option_values'] , $item['value'] , $item['attributes']);
 				break;
 			}
 		}
 
-		/**
+        /**
 		 * labelname and input row format*/
-		public function getCol($name , $inputOption = [])
+		public function getCol($name , $attributes = [])
 		{
-			$form_input = $this->get($name, $inputOption);
-			$item = $this->rawItem;
+			$item = $this->getRaw($name, $attributes);
+
 			if(!isEqual($item['type']  , ['hidden' , 'submit']) && !isset($item['label'])){
 				echo die("Cannot create Column {$name} , No Label specified");
 			}
 
 			$labelText = $item['label'];
-			if(!isset($item['required']) || ($item['required'] == false)) {
+			if(!isset($item['required'])) {
 				$labelText = $item['label_original'];
 			}
+
 			$form_label = $this->_form->label($labelText , $item['attributes']['id'] ?? '#');
+			$form_input = $this->get($name ,$attributes);
 
 			return <<<EOF
 				<div> 
@@ -143,19 +222,22 @@
 			EOF;
 		}
 
-		public function getRow($name , $inputOption = [])
+        /**
+		 * done*/
+		public function getRow($name , $attributes = [])
 		{
-			$form_input = $this->get($name, $inputOption);
-			$item = $this->rawItem;
-			if(!isEqual($item['type']  , ['hidden' , 'submit']) && !isset($item['label'])){
+			$item = $this->getRaw($name, $attributes);
+			if( !isEqual($item['type']  , ['hidden' , 'submit']) && !isset($item['label'])){
 				echo die("Cannot create Column {$name} , No Label specified");
 			}
 
 			$labelText = $item['label'];
-			if(!isset($item['required']) || ($item['required'] == false)) {
+			if(!isset($item['required'])) {
 				$labelText = $item['label_original'];
 			}
+			
 			$form_label = $this->_form->label($labelText , $item['attributes']['id'] ?? '#');
+			$form_input = $this->get($name ,$attributes);
 
 			return <<<EOF
 				<div class='row mb-2'>
@@ -165,42 +247,16 @@
 			EOF;
 		}
 
-
-		public function getRaw($name, $inputOption = []) {
-			if($this->checkExistKey($name)) {
-				return $this->overWriteInputOption($this->_items[$name], $inputOption);
-			}
-		}
-
-		public function start()
-		{
-			return $this->_form->open($this->_form_param);
-		}
-
-		public function end()
-		{
-			return $this->_form->close();
-		}
-
-		public function remove($name)
-		{
-			$items = $this->_items;
-			foreach($items as $key => $item)
-			{
-				if( $item['name'] == $name ){
-					unset($items[$key]);
-				}
-			}
-			$this->_items = $items;
-		}
-
+		 /**
+		 * done*/
 		public function addCustom($name, $label, $htmlCustom) {
 			$this->_customItems[$name] = [
 				'label' => $label,
 				'html'  => $htmlCustom
 			];
 		}
-
+        /**
+		 * done*/
 		public function getCustom($name, $displayType = 'row') {
 			$field = $this->_customItems[$name];
 			$form_label = $this->_form->label($field['label']);
@@ -221,7 +277,8 @@
 				EOF;
 			}
 		}
-
+         /**
+		 * done*/
 		public function addAfter($after_key , $item)
 		{
 			$this->add($item);
@@ -250,13 +307,110 @@
 
 			$this->_items = $new_order;
 		}
-
+        //deleted
+		public function checkField($name)
+		{
+			return $this->_items[$name] ?? false;
+		}
+        
+        /**
+		 * done*/
 		public function getFormRaw()
 		{
 			return [
 				'form' => $this->_form_param,
 				'inputs' => $this->_items
 			];
+		}
+
+		
+
+        /**
+		 * done*/
+		public function label($name)
+		{
+			$item = $this->getRaw($name);
+			$form_label = $this->_form->label($item['label'] , $item['attributes']['id'] ?? '#');
+			return $form_label;
+		}
+
+        /**
+		 * renamed*/
+		private function mergeAddtributeAndClass( $params )
+		{
+			$valid_array_param = [];
+
+			if( isset($params['attributes']) )
+				$valid_array_param = array_merge($valid_array_param , $params['attributes']);
+
+			if( isset($params['class']))
+				$valid_array_param['class'] = $params['class'];
+
+			return $valid_array_param;
+		}
+
+        /**
+		 * renamed*/
+		private function overwriteParams($attributes , $new_attributes)
+		{
+			foreach($new_attributes as $new_attr_key => $new_attr)
+			{
+				$isset = isset($attributes[$new_attr_key]);
+
+				if(isset($isset) && is_array($new_attr))
+				{
+					foreach($new_attr as $new_attr_attr_key => $new_attr_attr){
+						$attributes[$new_attr_key][$new_attr_attr_key] = $new_attr_attr;
+					}
+				}else
+				{
+					$attributes[$new_attr_key] = $new_attr;
+				}
+
+				if($new_attr_key == 'required')
+				{
+					if($new_attr === FALSE){
+						unset($attributes['required']);
+					}else{
+						// if(!isset($attributes['attributes']['required']))
+						// 	$attributes['attributes']['required'] = TRUE;
+					}
+				}
+			}
+			return $attributes;
+		}
+
+
+		public function setType( $type )
+		{
+			$this->_type = $type;
+		}
+
+		public function setValue($name , $value)
+		{
+			$this->_items[$name]['value'] = $value;
+		}
+
+
+		public function setOptionValues($name, $optionValues = []) {
+			$this->_items[$name]['option_values'] = $optionValues;
+		}
+
+		public function setValueObject($object)
+		{
+			$items = $this->_items;
+			foreach ($items as $key => $item) {
+				$name = trim($item['name']);//column_name equivalent
+				if(isset($object->$name))
+					$items[$key]['value'] = $object->$name;
+			}
+			$this->_items = $items;
+			return $items;
+		}
+
+		public function setUrl($url)
+		{
+			$this->_form_param['url'] = $url;
 		}
 
 		public function addId($id)
@@ -315,7 +469,6 @@
 
 			return $html;
 		}
-
 
 		public function getForm($inputType = 'row')
 		{
@@ -393,115 +546,4 @@
 				break;
 			}
 		}
-
-
-		private function checkExistKey($name){
-			if(!isset($this->_items[$name])) {
-				echo die("Key does not exist");
-			}
-			return true;
-		}
-
-		private function getItem($name) {
-			return $this->_items[$name];
-		}
-
-		private function overWriteInputOption($inputData, $inputOption) {
-			$this->errorSource = "overWriteInputOption : {$inputData['name']}";
-			$inputOption = $this->validateItemData($inputOption);
-			return array_merge($inputData, $inputOption);
-		}
-
-		private function validateItemData($param) {
-			if(isset($data['attributes'])) {
-				foreach($data['attributes'] as $attrKey => $row) {
-					if(isEqual($attrKey, 'required')) {
-						echo die("You are not allowed to add required in input attributes");
-					}
-				}
-			}
-			return $param;
-		}
-
-		/**
-		 * merge_all_valid_attributes
-		 */
-		private function mergeInputAttributes($params)
-		{
-			$valid_array_param = [];
-			if(isset($params['attributes']))
-				$valid_array_param = array_merge($valid_array_param, $params['attributes']);
-
-			if(isset($params['class']))
-				$valid_array_param['class'] = $params['class'];
-			
-			return $valid_array_param;
-		}
-
-
-		/**setters */
-		public function setType( $type )
-		{
-			$this->_type = $type;
-		}
-
-		public function setValue($name , $value)
-		{
-			$this->_items[$name]['value'] = $value;
-		}
-
-		public function setOptionValues($name, $optionValues = []) {
-			$this->_items[$name]['option_values'] = $optionValues;
-		}
-
-		public function setValueObject($object)
-		{
-			$items = $this->_items;
-			foreach ($items as $key => $item) {
-				$name = trim($item['name']);//column_name equivalent
-				if(isset($object->$name))
-					$items[$key]['value'] = $object->$name;
-			}
-			$this->_items = $items;
-			return $items;
-		}
-
-		public function setUrl($url)
-		{
-			$this->_form_param['url'] = $url;
-		}
-
-		/**
-		 * LAZY LOADING
-		 */
-		public function addDescription() {
-			$this->add([
-				'type' => 'textarea',
-				'name' => 'description',
-				'options' => [
-					'label' => 'Description',
-					'rows' => 3
-				],
-				'class' => 'form-control',
-				'required' => true
-			]);
-        }
-
-        public function addAddressText() {
-			$this->add([
-				'type' => 'textarea',
-				'name' => 'address',
-				'options' => [
-					'label' => 'Address',
-					'rows' => 3
-				],
-				'class' => 'form-control',
-				'required' => true
-			]);
-        }
-		public function addAndCall($params = [])
-		{
-			$this->add($params);
-			return $this->get($params['name']);
-		}
-	}
+	} 
