@@ -46,19 +46,14 @@
 
          $currentTime = strtotime(now());
          
-         if($currentTime >= $timestamp) {
-
+         if ($currentTime >= $timestamp) {
             $diff     = time()- $timestamp;
-
-            for($i = 0; $diff >= $length[$i] && $i < count($length)-1; $i++) 
-            {
+            for ($i = 0; $diff >= $length[$i] && $i < count($length)-1; $i++) {
                 $diff = $diff / $length[$i];
             }
-
             $diff = round($diff);
             return $diff . " " . $strTime[$i] . "(s) ago ";
          }
-
     }
   
     function date_long($date  , $format = null , $new = false)

@@ -1,4 +1,6 @@
 <?php
+    use Services\CategoryService;
+    load(['CategoryService'],SERVICES);
 
     class CategoryModel extends Model
     {
@@ -9,6 +11,12 @@
             'category',
             'active'
         ];
+
+        public function __construct()
+        {
+            parent::__construct();
+            $this->type = CategoryService::BARANGAY_TYPE;
+        }
 
         public function createOrUpdate($categoryData, $id = null) {
             $_fillables = parent::getFillablesOnly($categoryData);
@@ -30,5 +38,16 @@
             return parent::update([
                 'active' => !$category->active
             ],$id);
+        }
+
+
+        public function getBarangayTotal() {
+            $this->db->query(
+                "SELECT SUM(id) as total
+                    FROM {$this->table}
+                    WHERE category = '{$this->type}'
+                    GROUP BY id"
+            );
+            return $this->db->single()->total ?? 0;
         }
     }

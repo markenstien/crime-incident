@@ -35,8 +35,6 @@
 				$this->data['caseRadius'] = $this->reportService->createLatLangVicinity($cases);
 				$this->data['timeGrouped'] = $this->reportService->groupByTime($cases);
 				$this->data['crimeTypes'] = $this->data['generalSummary']['data']['crimeTypes'];
-
-				// dump($this->data['crimeTypes']);
 			}
 
 			return $this->view('report/create', $this->data);

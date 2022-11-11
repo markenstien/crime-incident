@@ -43,4 +43,13 @@ use Services\UserService;
         public function getAll($params = []) {
             return parent::all($params['where'] ?? null,$params['order'] ?? null);
         }
+
+        public function getTotal() {
+            $this->db->query(
+                "SELECT SUM(id) as total
+                    FROM {$this->table}
+                    GROUP BY id"
+            );
+            return $this->db->single()->total ?? 0;
+        }
     }

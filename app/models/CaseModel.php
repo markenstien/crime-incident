@@ -125,4 +125,13 @@ load(['CategoryService'],SERVICES);
 
             return $people;
         }
+
+        public function getTotal() {
+            $this->db->query(
+                "SELECT SUM(id) as total
+                    FROM {$this->table}
+                    GROUP BY id"
+            );
+            return $this->db->single()->total ?? 0;
+        }
     }
