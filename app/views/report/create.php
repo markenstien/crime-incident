@@ -238,7 +238,6 @@
 						<?php if($row['total'] > 20) :?>
 							icon = 'https://caseincident.xyz/public/uploads/map-icons/icon_danger.png';
 						<?php endif?>
-						<?php if($counter > 50) break?>
 							marker = new google.maps.Marker({
 								position: {
 									lat: <?php echo $row['lat']?>,
