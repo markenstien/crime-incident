@@ -232,20 +232,22 @@
 				});
 				
 				<?php if(isEqual($_GET['map_type'], 'by_vicinity')) :?>
-					<?php foreach($caseRadius['items'] as $key => $row) :?>
-						<?php if($key > 50) break?>
-						marker = new google.maps.Marker({
-							position: {
-								lat: <?php echo $row['lat']?>,
-								lng: <?php echo $row['lng']?>
-							},
-							map: map,
-							title: "There are (<?php echo $row['total']?>) case incidents in this vicinity",
-							icon : 'https://caseincident.xyz/public/uploads/map-icons/icon_danger.png'
-						});
-						google.maps.event.addListener(marker, 'click', function() {
-							window.location.href = marker.url;
-						});
+					<?php $counter = 0?>
+					<?php foreach($caseRadius['items'] as $row) :?>
+						<?php if($counter > 50) break?>
+							marker = new google.maps.Marker({
+								position: {
+									lat: <?php echo $row['lat']?>,
+									lng: <?php echo $row['lng']?>
+								},
+								map: map,
+								title: "There are (<?php echo $row['total']?>) case incidents in this vicinity",
+								icon : 'https://caseincident.xyz/public/uploads/map-icons/icon_danger.png'
+							});
+							google.maps.event.addListener(marker, 'click', function() {
+								window.location.href = marker.url;
+							});
+						<?php $counter++?>
 					<?php endforeach?>
 				<?php else:?>
 					<?php $generalSummary['cases'] = array_splice($generalSummary['cases'],0 ,50);?>
