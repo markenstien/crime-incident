@@ -1,6 +1,6 @@
 <?php 
     namespace Services;
-    load(['CategoryService'],SERVICES);
+    load(['CategoryService', 'UserService'],SERVICES);
 
     require_once LIBS.DS.'spout/vendor/autoload.php';
 	use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
@@ -17,6 +17,7 @@
 
             $stationModel = model('StationModel');
             $cagetoryModel = model('CategoryModel');
+            $caseModel = model('CaseModel');
 
 			foreach ($reader->getSheetIterator() as $sheet) 
             {
@@ -24,7 +25,7 @@
 			        // do stuff with the row
 			        $cells = $row->getCells();
 			        //skip headers
-			        if($counter == 1)
+			        if($counter < 821)
 			        {
 			        	$counter++;
 			        	continue;
@@ -79,7 +80,7 @@
                                 'category' => CategoryService::BARANGAY_TYPE
                             ]);
                         } else {
-                            $barangayId = $stationData->id;
+                            $barangayId = $barangayData->id;
                         }
                         //search 
 
@@ -88,11 +89,13 @@
                             'Case' => $cells[13]->getValue(),
                             'CaseDescription' => str_escape($cells[31]->getValue()),
                             'Status' => $cells[32]->getValue(),
-                            'IncidentTime' => $cells[3]->getValue()->format('H:i:s'),
-                            'IncidentDate' => $cells[3]->getValue()->format('Y-m-d'),
+                            'IncidentTime' => $cells[6]->getValue()->format('H:i:s'),
+                            'IncidentDate' => $cells[7]->getValue()->format('Y-m-d'),
                             'Station' => $stationId,
                             'Barangay' => $barangayId,
                             'CrimeType' => $crimeTypeId,
+                            'Latitude' => $cells[9]->getValue(),
+                            'Longhitude' => $cells[10]->getValue(),
                             'Suspect' => [
                                 'name' => str_escape($cells[17]->getValue()),
                                 'age' => str_escape($cells[19]->getValue()),
@@ -110,7 +113,8 @@
                             ],
                             'Victim' => [
                                 'name' => $cells[33]->getValue(),
-                                'gender' => $cells[35]->getValue(),
+                                'gender' => $cells[36]->getValue(),
+                                'age' => $cells[35]->getValue(),
                                 'remarks' => [
                                     'status' => $cells[34]->getValue(),
                                     'occupation'  => $cells[37]->getValue(),
@@ -124,6 +128,54 @@
 			}
 			$reader->close();
 
+
+            foreach($uploadStorage as $key => $row) {
+                $caseId = $caseModel->createOrUpdate([
+                    'incident_date' => $row['IncidentDate'],
+                    'incident_time'  => $row['IncidentTime'],
+                    'lng' => $row['Longhitude'],
+                    'lat' => $row['Latitude'],
+                    'title' => $row['Case'],
+                    'crime_type_id' => $row['CrimeType'],
+                    'barangay_id' => $row['Barangay'],
+                    'station_id' => $row['Station'],
+                    'description' => $row['CaseDescription']
+                ]);
+
+                if($caseId) {
+                    $suspect = $row['Suspect'];
+                    $victim = $row['Victim'];
+
+                    $gender = isEqual($suspect['gender'], 'm') ? 'Male' : 'Female';
+
+                    $fullName = explode(',', trim($suspect['name']));
+                    array_walk($fullName, 'trim');
+                    //insert people
+                    $caseModel->addPeople([
+                        'case_id' => $caseId,
+                        'firstname' => $fullName[0],
+                        'lastname'  => end($fullName),
+                        'injury_remarks' => json_encode($suspect['remarks']),
+                        'gender' => $gender,
+                        'age' => $suspect['age'],
+                        'people_type' => UserService::SUSPECT
+                    ]);
+
+                    $fullName = explode(',', trim($victim['name']));
+                    array_walk($fullName, 'trim');
+                    $gender = isEqual($victim['gender'], 'm') ? 'Male' : 'Female';
+
+                    $caseModel->addPeople([
+                        'case_id' => $caseId,
+                        'firstname' => $fullName[0],
+                        'lastname'  => end($fullName),
+                        'injury_remarks' => json_encode($victim['remarks']),
+                        'gender' => $gender,
+                        'age' => $victim['age'],
+                        'people_type' => UserService::VICTIM
+                    ]);
+                }
+            }
 			return $uploadStorage;
         }
     }

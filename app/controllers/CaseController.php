@@ -8,7 +8,7 @@ use Services\UserService;
 load(['CaseForm', 'PeopleForm'], FORMS);
 load(['UserService', 'CategoryService'], SERVICES);
 
-    class CaseController extends Controller
+    class CaseController extends AdminController
     {   
 
         public function __construct()

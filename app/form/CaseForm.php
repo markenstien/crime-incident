@@ -24,6 +24,7 @@ use Services\UserService;
             $this->addBarangayId();
             $this->addLat();
             $this->addLng();
+            $this->addDescription();
             // $this->addLandMark();
         }
         public function addTitle() {

@@ -3,7 +3,7 @@
     use Form\CategoryForm;
     load(['CategoryForm'],APPROOT.DS.'form');
 
-    class CategoryController extends Controller
+    class CategoryController extends AdminController
     {
         public function __construct()
         {

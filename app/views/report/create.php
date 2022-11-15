@@ -230,19 +230,25 @@
 					zoom: 8,
 					gestureHandling: "cooperative"
 				});
-
+				
 				<?php if(isEqual($_GET['map_type'], 'by_vicinity')) :?>
-					<?php foreach($caseRadius as $key => $row) :?>
+					<?php foreach($caseRadius['items'] as $key => $row) :?>
+						<?php if($key > 50) break?>
 						marker = new google.maps.Marker({
 							position: {
 								lat: <?php echo $row['lat']?>,
 								lng: <?php echo $row['lng']?>
 							},
 							map: map,
-							title: "There are (<?php echo $row['total']?>) case incidents in this vicinity"
+							title: "There are (<?php echo $row['total']?>) case incidents in this vicinity",
+							icon : 'http://dev.criminal/uploads/map-icons/danger.png'
+						});
+						google.maps.event.addListener(marker, 'click', function() {
+							window.location.href = marker.url;
 						});
 					<?php endforeach?>
 				<?php else:?>
+					<?php $generalSummary['cases'] = array_splice($generalSummary['cases'],0 ,50);?>
 					<?php foreach($generalSummary['cases'] as $key => $row) :?>
 						marker = new google.maps.Marker({
 							position: {
@@ -252,6 +258,7 @@
 							map: map,
 							url: "<?php echo _route('case:show' , $row->id)?>",
 							title: "<?php echo $row->title?>",
+							icon : 'http://dev.criminal/uploads/map-icons/warning.png'
 						});
 
 						google.maps.event.addListener(marker, 'click', function() {
@@ -275,7 +282,7 @@
 				let backgrounds = [];
 
 				<?php foreach($timeGroupTotal as $key => $row) :?>
-					<?php if($row >= 4) :?>
+					<?php if($row >= 20) :?>
 						backgrounds.push(colors.danger);
 					<?php else:?>
 						backgrounds.push(colors.primary);
@@ -339,7 +346,7 @@
 				let pieColors = [colors.primary,colors.secondary,colors.success,colors.info];
 
 				<?php foreach($timeGroupTotal as $key => $row) :?>
-					<?php if($row >= 4) :?>
+					<?php if($row >= 20) :?>
 						backgrounds.push(colors.danger);
 					<?php else:?>
 						backgrounds.push(pieColors[Math.floor(Math.random() * pieColors.length)]);

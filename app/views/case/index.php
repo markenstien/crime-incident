@@ -14,7 +14,7 @@
                         <th>Case</th>
                         <th>Crime Type</th>
                         <th>Date</th>
-                        <th>Status</th>
+                        <th>Barangay</th>
                         <th>Station</th>
                         <th>Action</th>
                     </thead>
@@ -27,7 +27,7 @@
                                 <td><?php echo $row->title?></td>
                                 <td><?php echo $row->crime_type?></td>
                                 <td><?php echo $row->incident_date?></td>
-                                <td><?php echo $row->incident_status?></td>
+                                <td><?php echo $row->barangay?></td>
                                 <td><?php echo $row->station_name?></td>
                                 <td><?php echo wLinkDefault(_route('case:show', $row->id), 'Show')?></td>
                             </tr>

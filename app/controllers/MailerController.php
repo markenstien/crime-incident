@@ -1,6 +1,6 @@
 <?php 
 
-	class MailerController extends Controller
+	class MailerController extends AdminController
 	{
 
 		public function __construct()

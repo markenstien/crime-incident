@@ -3,7 +3,7 @@
     use Form\StationForm;   
     load(['StationForm'],FORMS);
 
-    class StationController extends Controller
+    class StationController extends AdminController
     {
         public function __construct()
         {

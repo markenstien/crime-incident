@@ -35,7 +35,7 @@
                 'where' => $condition,
                 'order' => 'incident_date desc'
             ]);
-
+            
             foreach($cases as $key => $row) {
                 $row->people = $this->caseModel->getPeople($row->id);
             }
@@ -70,6 +70,10 @@
                 ]
             ];
 
+            if(!$cases){
+                return false;
+            }
+
             $first = $cases[0];
             $last = end($cases);
             
@@ -78,6 +82,9 @@
                 'stations' => [],
                 'barangays' => []
             ];
+            
+            // dump($cases);
+
             foreach($cases as $key => $row) {
                 //categories
                 if(!isEqual($row->crime_type_id, array_keys($tmpHolder['crimeTypes']))){
@@ -104,6 +111,7 @@
                         'total' => 0
                     ];
                 }
+                
                 $tmpHolder['barangays'][$row->barangay_id]['total']++;
 
                 if(is_array($row->people)) {
@@ -205,18 +213,19 @@
             $retVal = [
                 'radius' => [
                     'lat' => 123123, 'lng' => 123123, 'total' => 5,
-                ]
+                ],
+                'items' => []
             ];
 
             foreach($cases as $key => $row) {
-                if(!isEqual($row->case_radius, array_keys($retVal))) {
-                    $retVal[$row->case_radius] = [
+                if(!isEqual($row->case_radius, array_keys($retVal['items']))) {
+                    $retVal['items'][$row->case_radius] = [
                         'lat' => $row->lat,
                         'lng' => $row->lng,
                         'total' => 0
                     ];
                 }
-                $retVal[$row->case_radius]['total']++;
+                $retVal['items'][$row->case_radius]['total']++;
             }
             
             return $retVal;

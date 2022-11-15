@@ -43,10 +43,9 @@
 
         public function getBarangayTotal() {
             $this->db->query(
-                "SELECT SUM(id) as total
+                "SELECT count(id) as total
                     FROM {$this->table}
-                    WHERE category = '{$this->type}'
-                    GROUP BY id"
+                    WHERE category = '{$this->type}'"
             );
             return $this->db->single()->total ?? 0;
         }

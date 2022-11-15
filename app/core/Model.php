@@ -417,7 +417,7 @@
 	}
 	
 	public function referenceSeries($prefix = null, $suffix = null) {
-		return $this->token->createSeries($this->lastId(), 5, $prefix = null, $suffix = null);
+		return $this->token->createSeries($this->lastId(), 4, $prefix = null, $suffix = null);
 	}
 
 	public function createOrUpdate($platformData, $id = null) {

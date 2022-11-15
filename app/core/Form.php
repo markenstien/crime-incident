@@ -479,9 +479,13 @@
 				'type' => 'textarea',
 				'name' => 'description',
 				'options' => [
-					'label' => 'Description',
-					'rows' => 3
+					'label' => 'Description'
 				],
+				
+				'attributes' => [
+					'rows' => 10
+				],
+
 				'class' => 'form-control',
 				'required' => true
 			]);

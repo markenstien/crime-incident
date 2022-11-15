@@ -1,7 +1,7 @@
 <?php 
 	load(['UserForm'] , APPROOT.DS.'form');
 	use Form\UserForm;
-	class UserController extends Controller
+	class UserController extends AdminController
 	{
 
 		public function __construct()

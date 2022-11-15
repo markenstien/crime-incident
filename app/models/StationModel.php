@@ -46,9 +46,8 @@ use Services\UserService;
 
         public function getTotal() {
             $this->db->query(
-                "SELECT SUM(id) as total
-                    FROM {$this->table}
-                    GROUP BY id"
+                "SELECT count(id) as total
+                    FROM {$this->table}"
             );
             return $this->db->single()->total ?? 0;
         }

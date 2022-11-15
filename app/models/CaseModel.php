@@ -8,6 +8,7 @@ load(['CategoryService'],SERVICES);
         public $table = 'cases';
 
         public $_fillables = [
+            'reference',
             'title',
             'description',
             'incident_date',
@@ -29,8 +30,13 @@ load(['CategoryService'],SERVICES);
         public function createOrUpdate($platformData, $id = null)
         {
             if(is_null($id)) {
-                $platformData['_token'] = 'reference';
+                // $platformData['_token'] = 'reference';
+                $prefix = '137501';
+                $yearMonth = date("Ym", strtotime($platformData['incident_date']));
+                $seriesId = parent::referenceSeries();
+                $platformData['reference'] = strtoupper("{$prefix}-{$yearMonth}-{$seriesId}");
             }
+
             $platformData['lng'] = str_to_number($platformData['lng']);
             $platformData['lat'] = str_to_number($platformData['lat']);
             
@@ -128,9 +134,8 @@ load(['CategoryService'],SERVICES);
 
         public function getTotal() {
             $this->db->query(
-                "SELECT SUM(id) as total
-                    FROM {$this->table}
-                    GROUP BY id"
+                "SELECT count(id) as total
+                    FROM {$this->table}"
             );
             return $this->db->single()->total ?? 0;
         }

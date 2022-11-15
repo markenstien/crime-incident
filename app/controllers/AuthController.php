@@ -20,6 +20,10 @@
 
 		public function login()
 		{
+			if(whoIs()) {
+				return redirect(_route('dashboard:index'));
+			}
+			
 			if( isSubmitted() )
 			{
 				$post = request()->posts();

@@ -10,13 +10,11 @@
 		}
 
 		public function test() {
-			$path = PATH_UPLOAD.DS.'complete-crime-list.xlsx';
+			$path = PATH_UPLOAD.DS.'crimes_clean_date.xlsx';
 			if (file_exists($path)){
 				$files = UploadExcelService::upload($path);
-				dump($files);
-				
 			} else {
-				echo 'FILE ERROR : --'.PATH_UPLOAD.DS.'crime-case-list.xlsx';
+				echo 'FILE ERROR : --'.PATH_UPLOAD.DS.'crimes_clean_date.xlsx';
 			}
 		}
 	}

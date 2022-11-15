@@ -50,6 +50,10 @@
                                 <td><?php echo $case->barangay?></td>
                             </tr>
                             <tr>
+                                <td>Description</td>
+                                <td><textarea name="" id="" cols="30" rows="10" class="form-control"><?php echo $case->description?></textarea></td>
+                            </tr>
+                            <tr>
                                 <td colspan="2"><?php echo wLinkDefault(_route('case:edit', $case->id), 'Edit Case')?></td>
                             </tr>
                         </tbody>

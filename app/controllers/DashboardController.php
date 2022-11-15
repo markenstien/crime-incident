@@ -3,7 +3,7 @@
 	use Services\ReportService;
 	use Services\UserService;
 	load(['UserService', 'ReportService'],SERVICES);
-	class DashboardController extends Controller
+	class DashboardController extends AdminController
 	{
 		public function __construct()
 		{
@@ -19,10 +19,14 @@
 		{
 			$this->data['page_title'] = 'Dashboard';
 			$today = nowMilitary();
-			$last60Days = date('Y-m-d', strtotime('-60 days' . $today));
-			$this->reportService->generate($last60Days, $today);
+			$filter = $_GET['filter'] ?? '1 year';
 
+			$last60Days = date('Y-m-d', strtotime("- {$filter}" . $today));
+			
+			$this->reportService->generate($last60Days, $today);
 			$cases = $this->reportService->getCases();
+
+			// dump($this->reportService->summarizeGeneral($cases));
 			
 			$report = [
 				'summarized' => $this->reportService->summarizeGeneral($cases),
@@ -35,7 +39,7 @@
 			];
 
 			$this->data['cases']  = $cases;
-			if($report['summarized']) {
+			if($cases) {
 				//sort stations to highest
 				if($report['summarized']['data']['stations']) {
 					$stations = $report['summarized']['data']['stations'];
@@ -63,11 +67,9 @@
 					$report['summarized']['data']['barangays'] = $barangays;
 				}
 
-				$this->data['generalSummary'] = $this->reportService->summarizeGeneral($cases);
 				$this->data['caseRadius'] = $this->reportService->createLatLangVicinity($cases);
 				$this->data['timeGrouped'] = $this->reportService->groupByTime($cases);
-				$this->data['crimeTypes'] = $this->data['generalSummary']['data']['crimeTypes'];
-
+				$this->data['crimeTypes'] = $report['summarized']['data']['crimeTypes'];
 			}
 			$this->data['report'] = $report;
 			return $this->view('dashboard/index', $this->data);

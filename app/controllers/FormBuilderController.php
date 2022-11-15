@@ -3,7 +3,7 @@
 	use Form\FormBuilderForm;
 	load(['FormBuilderForm'] , APPROOT.DS.'form');
 
-	class FormBuilderController extends Controller
+	class FormBuilderController extends AdminController
 	{
 
 		public function __construct()
