@@ -233,7 +233,11 @@
 				
 				<?php if(isEqual($_GET['map_type'], 'by_vicinity')) :?>
 					<?php $counter = 0?>
+					let icon = 'https://caseincident.xyz/public/uploads/map-icons/icon_primary.png';
 					<?php foreach($caseRadius['items'] as $row) :?>
+						<?php if($row['total'] > 20) :?>
+							icon = 'https://caseincident.xyz/public/uploads/map-icons/icon_danger.png';
+						<?php endif?>
 						<?php if($counter > 50) break?>
 							marker = new google.maps.Marker({
 								position: {
@@ -242,7 +246,7 @@
 								},
 								map: map,
 								title: "There are (<?php echo $row['total']?>) case incidents in this vicinity",
-								icon : 'https://caseincident.xyz/public/uploads/map-icons/icon_danger.png'
+								icon : icon
 							});
 							google.maps.event.addListener(marker, 'click', function() {
 								window.location.href = marker.url;
