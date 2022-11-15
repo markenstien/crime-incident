@@ -241,7 +241,7 @@
 							},
 							map: map,
 							title: "There are (<?php echo $row['total']?>) case incidents in this vicinity",
-							icon : 'http://dev.criminal/uploads/map-icons/danger.png'
+							icon : 'https://caseincident.xyz/uploads/map-icons/danger.png'
 						});
 						google.maps.event.addListener(marker, 'click', function() {
 							window.location.href = marker.url;
@@ -258,7 +258,7 @@
 							map: map,
 							url: "<?php echo _route('case:show' , $row->id)?>",
 							title: "<?php echo $row->title?>",
-							icon : 'http://dev.criminal/uploads/map-icons/warning.png'
+							icon : 'https://caseincident.xyz/uploads/map-icons/warning.png'
 						});
 
 						google.maps.event.addListener(marker, 'click', function() {
