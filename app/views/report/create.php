@@ -235,7 +235,8 @@
 					<?php $counter = 0?>
 					let icon = 'https://caseincident.xyz/public/uploads/map-icons/icon_primary.png';
 					<?php foreach($caseRadius['items'] as $row) :?>
-						<?php if($row['total'] > 20) :?>
+						<?php if(empty($row['lat']) || empty($row['lng'])) continue?>
+						<?php if($row['total'] > 15) :?>
 							icon = 'https://caseincident.xyz/public/uploads/map-icons/icon_danger.png';
 						<?php endif?>
 						<?php if($counter > 100) break?>
@@ -256,6 +257,7 @@
 				<?php else:?>
 					<?php $generalSummary['cases'] = array_splice($generalSummary['cases'],0 ,100);?>
 					<?php foreach($generalSummary['cases'] as $key => $row) :?>
+						<?php if(empty($row->lat) || empty($row->lng)) continue?>
 						marker = new google.maps.Marker({
 							position: {
 								lat: <?php echo $row->lat?>,
