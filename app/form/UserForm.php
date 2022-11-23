@@ -13,22 +13,23 @@
 		public function __construct( $name = null)
 		{
 			parent::__construct();
-
+			$this->stationModel = model('StationModel');
 			$this->name = $name ?? 'form_user';
 
 			$this->initCreate();
 			/*personal details*/
 			$this->addFirstName();
 			$this->addLastName();
-			$this->addGender();
+			// $this->addGender();
 			/*end*/
 			$this->addPhoneNumber();
 			$this->addEmail();
-			$this->addAddress();
+			// $this->addAddress();
 
 			$this->addUsername();
 			$this->addPassword();
 			$this->addUserType();
+			$this->addStation();
 			$this->addProfile();
 			
 			$this->addSubmit('');
@@ -219,6 +220,46 @@
 				]
 			]);
 		}
+		
+		/**
+		 * CUSTOM
+		 */
+		public function addStation() {
+            $value = null;
+            if(isEqual(whoIs('user_type'), UserService::ADMIN)) {
+                $options = $this->stationModel->getAll();
+            }else{
+                $stationId =  whoIs('station_id');
+                $options = $this->stationModel->getAll([
+                    'where' => [
+                        'id' =>$stationId
+                    ]
+                ]);
+
+                $value = $stationId;
+            }
+            $options = arr_layout_keypair($options,['id','name']);
+
+            $inputParam = [
+                'name' => 'station_id',
+                'type' => 'select',
+                'options' => [
+                    'label' => 'Stations',
+                    'option_values' => $options
+                ],
+                'class' => 'form-control',
+                'required' => true
+            ];
+
+            if(!is_null($value)) {
+                $inputParam['value'] = $value;
+                $inputParam['attributes'] = [
+                    'readonly' => true,
+                ];
+            }
+
+            $this->add($inputParam);
+        }
 
 		public function addSubmit()
 		{

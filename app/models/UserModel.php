@@ -34,8 +34,18 @@
 		{
 			$user_id = $id;
 			$fillable_datas = $this->getFillablesOnly($user_data);
+
+			if(!$this->validate($fillable_datas, $id)) {
+				return false;
+			}
+
 			if(!is_null($id))
 			{
+				if(!empty($userNameExists) && ($userNameExists->id != $id)) {
+					$this->addError("Username already exists");
+					return false;
+				}
+
 				//change password also
 				if(empty($fillable_datas['password']) )
 					unset($fillable_datas['password']);

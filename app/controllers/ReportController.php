@@ -24,7 +24,7 @@
 			$this->data['caseForm'] = $this->caseForm;
 
 			if (isset($req['filter'])) {
-				$this->reportService->generate($req['start_date'], $req['end_date'], $req['station_id'], $req['barangay_id']);
+				$this->reportService->generate($req['start_date'], $req['end_date'], $req['station_id'], $req['barangay_id'], [$req['crime_type_id']]);
 				$cases = $this->reportService->getCases();
 				
 				if(!$cases) {

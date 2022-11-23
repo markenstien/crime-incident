@@ -66,7 +66,8 @@ load(['CategoryService'],SERVICES);
                     cases.id as case_id,
                     round(((cases.lat + cases.lng + (200/3.14)) * 3.14) , 3) as case_radius,
                     cat_brgy.name as barangay,
-                    station.name as station_name
+                    station.name as station_name,
+                    cases.id as case_id
                     
                     FROM {$this->table}
                     LEFT JOIN categories as cat_crime

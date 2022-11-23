@@ -72,13 +72,15 @@
 					<?php echo wDivider('20') ?>
 
 					<div class="form-group row mt-3">
-						<div class="col"><?php echo $caseForm->getCol('station_id' , [
-							'required' => false
-						])?></div>
 						<div class="col"><?php echo $caseForm->getCol('barangay_id', [
 							'required' => false
 						])?></div>
-						
+						<div class="col"><?php echo $caseForm->getCol('station_id', [
+							'required' => false
+						])?></div>
+						<div class="col"><?php echo $caseForm->getCol('crime_type_id', [
+							'required' => false
+						])?></div>
 					</div>
 
 
@@ -264,7 +266,7 @@
 								lng: <?php echo $row->lng?>
 							},
 							map: map,
-							url: "<?php echo _route('case:show' , $row->id)?>",
+							url: "<?php echo _route('case:show' , $row->case_id)?>",
 							title: "<?php echo $row->title?>",
 							icon : 'https://caseincident.xyz/public/uploads/map-icons/icon_warning.png'
 						});

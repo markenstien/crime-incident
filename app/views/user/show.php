@@ -13,28 +13,20 @@
 					<div>
 						<img src="<?php echo $user->profile?>" style="width: 150px;">
 					</div>
-					<!-- <div>
-						<label class="tx-11">Reference</label>
-						<p><?php echo $user->user_code?></p>
-					</div> -->
 					<div>
 						<label class="tx-11">Name</label>
 						<p><?php echo $user->lastname . ',' . $user->firstname?></p>
 					</div>
 					<div>
-						<label class="tx-11">Gender</label>
-						<p><?php echo $user->gender?></p>
-					</div>
-					<div>
 						<label class="tx-11">Email And Mobile Number</label>
 						<p><?php echo $user->email?></p>
 						<p><?php echo $user->phone?></p>
-
-						<span><a href="<?php echo _route('user:sendCredential' , $user->id)?>" title="Click to send the credential to the user">Send Credentials to User :</a><?php echo $user->email?></span>
+						<!-- <span><a href="<?php echo _route('user:sendCredential' , $user->id)?>" title="Click to send the credential to the user">Send Credentials to User :</a><?php echo $user->email?></span> -->
 					</div>
+
 					<div>
-						<label class="tx-11">Address</label>
-						<p><?php echo "$user->address"?></p>
+						<label class="tx-11">Username</label>
+						<p><?php echo $user->username?></p>
 					</div>
 					<hr>
 					<?php if($is_admin && !isEqual($user->user_type , 'admin')) :?>

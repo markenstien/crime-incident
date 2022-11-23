@@ -64,13 +64,16 @@
 			$item['label'] = $label;
 			$item['label_original']  = $label_original;
 
+			
 			$item = $this->validateItemData($item);
+
 			$this->_items[$name] = $item;
 		} 
 
 		public function getLabel($name) {
 			if($this->checkExistKey($name)) {
 				$item = $this->getItem($name);
+				return $item['label_original'];
 				return [
 					$item['label'],
 					$item['label_original'],
@@ -90,6 +93,10 @@
 			$rawItem = $this->getRaw($name, $inputOption);
 			$this->rawItem = $rawItem;
 
+			if(isset($rawItem['required']) && $rawItem['required'] === TRUE) {
+				$rawItem['attributes']['required'] = true;
+			}
+			
 			switch($rawItem['type'])
 			{
 				case 'text':
@@ -124,6 +131,7 @@
 		public function getCol($name , $inputOption = [])
 		{
 			$form_input = $this->get($name, $inputOption);
+
 			$item = $this->rawItem;
 			if(!isEqual($item['type']  , ['hidden' , 'submit']) && !isset($item['label'])){
 				echo die("Cannot create Column {$name} , No Label specified");
@@ -172,9 +180,9 @@
 			}
 		}
 
-		public function start()
+		public function start($param = null)
 		{
-			return $this->_form->open($this->_form_param);
+			return $this->_form->open($param ?? $this->_form_param);
 		}
 
 		public function end()
@@ -413,6 +421,7 @@
 		}
 
 		private function validateItemData($param) {
+
 			if(isset($data['attributes'])) {
 				foreach($data['attributes'] as $attrKey => $row) {
 					if(isEqual($attrKey, 'required')) {

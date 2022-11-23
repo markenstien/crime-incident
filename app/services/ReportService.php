@@ -30,6 +30,12 @@
             if (!is_null($barangayId) && !empty($barangayId)) {
                 $condition['barangay_id'] = $barangayId;
             }
+            if(!empty($crimeTypes)) {
+                $condition['crime_type_id'] = [
+                    'condition' => 'in',
+                    'value' => $crimeTypes
+                ];
+            }
 
             $cases = $this->caseModel->getAll([
                 'where' => $condition,

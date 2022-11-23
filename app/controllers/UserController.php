@@ -59,7 +59,6 @@
 		{
 			if(isSubmitted()) {
 				$post = request()->posts();
-				$post['profile'] = 'profile';
 				$res = $this->model->update($post , $post['id']);
 
 				if($res) {

@@ -32,7 +32,6 @@ load(['UserService', 'CategoryService'], SERVICES);
                 $this->data['cases'] = $this->model->getAll([
                     'order' => 'cases.incident_date desc'
                 ]);
-                
             }
             
             return $this->view('case/index', $this->data);

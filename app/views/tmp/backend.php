@@ -65,14 +65,6 @@ License: For each use you must have a valid license purchased only from above li
                         </a>
                         <?php if($auth) :?>
                             <?php $notifications = _notify_pull_items($auth->id)?>
-                            <form class="search-form">
-                                <div class="input-group">
-                                    <div class="input-group-text">
-                                      <i data-feather="search"></i>
-                                    </div>
-                                    <input type="text" class="form-control" id="navbarForm" placeholder="Search here...">
-                                </div>
-                            </form>
                             <ul class="navbar-nav">
                                   <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -110,12 +102,12 @@ License: For each use you must have a valid license purchased only from above li
                                   </li>
                               <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="<?php echo _route('user:show' , $auth->id)?>" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <img class="wd-30 ht-30 rounded-circle" src="https://via.placeholder.com/30x30" alt="profile">
+                                  <img class="wd-30 ht-30 rounded-circle" src="<?php echo $auth->profile?>" alt="profile">
                                 </a>
                                 <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
                                   <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
                                     <div class="mb-3">
-                                      <img class="wd-80 ht-80 rounded-circle" src="https://via.placeholder.com/80x80" alt="">
+                                      <img class="wd-80 ht-80 rounded-circle" src="<?php echo $auth->profile?>" alt="">
                                     </div>
                                     <div class="text-center">
                                       <p class="tx-16 fw-bolder"><?php echo $auth->firstname . ' '.$auth->lastname?></p>
@@ -184,6 +176,15 @@ License: For each use you must have a valid license purchased only from above li
                                     <span class="menu-title">Categories</span>
                                 </a>
                             </li>
+                            <?php if(isEqual($auth->user_type, UserService::ADMIN)) :?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?php echo _route('user:index')?>">
+                                    <i class="link-icon" data-feather="box"></i>
+                                    <span class="menu-title">Users</span>
+                                </a>
+                            </li>
+                            <?php endif?>
+
                             <li class="nav-item">
                                 <a href="/ReportController/create" class="nav-link">
                                     <i class="link-icon" data-feather="hash"></i>
