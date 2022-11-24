@@ -21,7 +21,7 @@
 			if(!empty($params))
 			{
 				$this->data['users'] = $this->model->getAll([
-					'where' => $this->model->getFillablesOnly($params)
+					'where' => $params
 				]);
 			}else{
 				$this->data['users'] = $this->model->getAll( );

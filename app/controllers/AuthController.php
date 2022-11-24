@@ -15,6 +15,8 @@
 
 		public function index()
 		{
+			request()->inputs();
+			
 			return $this->login();
 		}
 
