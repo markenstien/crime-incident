@@ -2,10 +2,10 @@
     namespace Services;
     use Services\CategoryService;
     use Services\UserService;
-    
-    load(['CategoryService', 'UserService'],SERVICES);
-    require_once LIBS.DS.'spout/vendor/autoload.php';
 
+    load(['CategoryService', 'UserService'], SERVICES);
+
+    require_once LIBS.DS.'spout/vendor/autoload.php';
 	use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
     class UploadExcelService {
@@ -28,7 +28,7 @@
 			        // do stuff with the row
 			        $cells = $row->getCells();
 			        //skip headers
-			        if($counter < 821)
+			        if($counter < 1316)
 			        {
 			        	$counter++;
 			        	continue;
@@ -166,7 +166,7 @@
 
                     $fullName = explode(',', trim($victim['name']));
                     array_walk($fullName, 'trim');
-                    $gender = isEqual($victim['gender'], 'm') ? UserService::MALE : UserService::FEMALE;
+                    $gender = isEqual($victim['gender'], 'm') ?  UserService::MALE : UserService::FEMALE;
 
                     $caseModel->addPeople([
                         'case_id' => $caseId,

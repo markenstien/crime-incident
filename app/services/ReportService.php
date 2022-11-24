@@ -183,7 +183,7 @@
 
             foreach($peopleArray as $key => $people) {
                 if(isEqual($people->people_type, UserService::VICTIM)) {
-                    if(isEqual($people->people_type, UserService::FEMALE)) {
+                    if(isEqual($people->gender, UserService::FEMALE)) {
                         $retVal['victims']['female']['total']++;
                     }else{
                         $retVal['victims']['male']['total']++;
@@ -197,7 +197,7 @@
                     $retVal['victims']['total']++;
                 }else{
                     $retVal['suspects']['total']++;
-                    if(isEqual($people->people_type, UserService::FEMALE)) {
+                    if(isEqual($people->gender, UserService::FEMALE)) {
                         $retVal['suspects']['female']['total']++;
                     }else{
                         $retVal['suspects']['male']['total']++;
