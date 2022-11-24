@@ -91,7 +91,7 @@
 		<!-- END FILTER -->
 			<?php if(isset($generalSummary) && !empty($generalSummary)) :?>
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-5">
 						<h4>Summarize Report</h4>
 						<table class="table table-bordered">
 							<tr>
@@ -170,7 +170,7 @@
 						</table>
 					</div>
 
-					<div class="col-md-8">
+					<div class="col-md-7">
 						<section>
 							<h4>Crime Map</h4>
 							<section>
@@ -196,7 +196,6 @@
 							</div>
 						</div>
 					</div>
-					
 				</div>
 			<?php endif?>
 		</div>
