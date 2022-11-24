@@ -88,8 +88,6 @@
                 'stations' => [],
                 'barangays' => []
             ];
-            
-            // dump($cases);
 
             foreach($cases as $key => $row) {
                 //categories

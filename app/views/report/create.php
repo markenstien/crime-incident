@@ -93,81 +93,83 @@
 				<div class="row">
 					<div class="col-md-5">
 						<h4>Summarize Report</h4>
-						<table class="table table-bordered">
-							<tr>
-								<td>Period</td>
-								<td>
-									<div>From : <?php echo $_GET['start_date']?></div>
-									<div>To : <?php echo $_GET['end_date']?></div>
-									
-									<?php if(!empty($_GET['start_time']) && !empty($_GET['end_time'])) :?>
-										<div>Time From : <?php echo $_GET['start_time']?></div>
-										<div>Time To : <?php echo $_GET['end_time']?></div>
-									<?php endif ?>
-								</td>
-							</tr>
-							<tr>
-								<td>Map Type</td>
-								<td><?php echo $_GET['map_type']?></td>
-							</tr>
-							<tr>
-								<td>Total Number Of Cases: </td>
-								<td><?php echo $generalSummary['totalNumberOfCase']?></td>
-							</tr>
-							<tr>
-								<td>
-									Crimes Types 
-									<ul>
-										<?php foreach($generalSummary['data']['crimeTypes'] as $key => $row) :?>
-											<li><?php echo $row['name'] .' - ('. $row['total'] .')'?></li>
-										<?php endforeach?>
-									</ul>
-								</td>
-								<td><?php echo $generalSummary['totalNumberOfCrimeType']?></td>
-							</tr>
-							<tr>
-								<td>
-									Stations Involved:
-									<ul>
-										<?php foreach($generalSummary['data']['stations'] as $key => $row) :?>
-											<li><?php echo $row['name'] .' - ('. $row['total'] .')'?></li>
-										<?php endforeach?>
-									</ul>
-								</td>
-								<td><?php echo $generalSummary['totalNumberOfStation']?></td>
-							</tr>
-							<tr>
-								<td>
-									Barangays:
-									<ul>
-										<?php foreach($generalSummary['data']['barangays'] as $key => $row) :?>
-											<li><?php echo $row['name'] .' - ('. $row['total'] .')'?></li>
-										<?php endforeach?>
-									</ul>
-								</td>
-								<td><?php echo $generalSummary['totalNumberOfBarangay']?></td>
-							</tr>
-							<tr>
-								<td>
-									People Involved :
-									<ul>
-										<li>Victims (<?php echo $generalSummary['peopleInvolved']['victims']['total']?>)
-											<ul>
-												<li>Female : (<?php echo $generalSummary['peopleInvolved']['victims']['female']?>)</li>
-												<li>Male : (<?php echo $generalSummary['peopleInvolved']['victims']['male']?>)</li>
-											</ul>
-										</li>
-										<li>Suspects (<?php echo $generalSummary['peopleInvolved']['suspects']['total']?>)
-											<ul>
-												<li>Female : (<?php echo $generalSummary['peopleInvolved']['suspects']['female']?>)</li>
-												<li>Male : (<?php echo $generalSummary['peopleInvolved']['suspects']['male']?>)</li>
-											</ul>
-										</li>
-									</ul>
-								</td>
-								<td><?php echo $generalSummary['peopleInvolved']['total']?></td>
-							</tr>
-						</table>
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<tr>
+									<td>Period</td>
+									<td>
+										<div>From : <?php echo $_GET['start_date']?></div>
+										<div>To : <?php echo $_GET['end_date']?></div>
+										
+										<?php if(!empty($_GET['start_time']) && !empty($_GET['end_time'])) :?>
+											<div>Time From : <?php echo $_GET['start_time']?></div>
+											<div>Time To : <?php echo $_GET['end_time']?></div>
+										<?php endif ?>
+									</td>
+								</tr>
+								<tr>
+									<td>Map Type</td>
+									<td><?php echo $_GET['map_type']?></td>
+								</tr>
+								<tr>
+									<td>Total Number Of Cases: </td>
+									<td><?php echo $generalSummary['totalNumberOfCase']?></td>
+								</tr>
+								<tr>
+									<td>
+										Crimes Types 
+										<ul>
+											<?php foreach($generalSummary['data']['crimeTypes'] as $key => $row) :?>
+												<li><?php echo $row['name'] .' - ('. $row['total'] .')'?></li>
+											<?php endforeach?>
+										</ul>
+									</td>
+									<td><?php echo $generalSummary['totalNumberOfCrimeType']?></td>
+								</tr>
+								<tr>
+									<td>
+										Stations Involved:
+										<ul>
+											<?php foreach($generalSummary['data']['stations'] as $key => $row) :?>
+												<li><?php echo $row['name'] .' - ('. $row['total'] .')'?></li>
+											<?php endforeach?>
+										</ul>
+									</td>
+									<td><?php echo $generalSummary['totalNumberOfStation']?></td>
+								</tr>
+								<tr>
+									<td>
+										Barangays:
+										<ul>
+											<?php foreach($generalSummary['data']['barangays'] as $key => $row) :?>
+												<li><?php echo $row['name'] .' - ('. $row['total'] .')'?></li>
+											<?php endforeach?>
+										</ul>
+									</td>
+									<td><?php echo $generalSummary['totalNumberOfBarangay']?></td>
+								</tr>
+								<tr>
+									<td>
+										People Involved :
+										<ul>
+											<li>Victims (<?php echo $generalSummary['peopleInvolved']['victims']['total']?>)
+												<ul>
+													<li>Female : (<?php echo $generalSummary['peopleInvolved']['victims']['female']?>)</li>
+													<li>Male : (<?php echo $generalSummary['peopleInvolved']['victims']['male']?>)</li>
+												</ul>
+											</li>
+											<li>Suspects (<?php echo $generalSummary['peopleInvolved']['suspects']['total']?>)
+												<ul>
+													<li>Female : (<?php echo $generalSummary['peopleInvolved']['suspects']['female']?>)</li>
+													<li>Male : (<?php echo $generalSummary['peopleInvolved']['suspects']['male']?>)</li>
+												</ul>
+											</li>
+										</ul>
+									</td>
+									<td><?php echo $generalSummary['peopleInvolved']['total']?></td>
+								</tr>
+							</table>
+						</div>
 					</div>
 
 					<div class="col-md-7">
@@ -224,6 +226,7 @@
 		<!-- MAP SCRIPT -->
 		<script defer>
 			let map;
+			let marker;
 			function initMap() {
 				let myLatLng = { lat: <?php echo $case->lat?>, lng: <?php echo $case->lng?> };
 				map = new google.maps.Map(document.getElementById("myMap"), {
@@ -256,8 +259,8 @@
 						<?php $counter++?>
 					<?php endforeach?>
 				<?php else:?>
-					<?php $generalSummary['cases'] = array_splice($generalSummary['cases'],0 ,100);?>
-					<?php foreach($generalSummary['cases'] as $key => $row) :?>
+					<?php $myCases = array_splice($generalSummary['cases'],0 ,100);?>
+					<?php foreach($myCases as $key => $row) :?>
 						<?php if(empty($row->lat) || empty($row->lng)) continue?>
 						marker = new google.maps.Marker({
 							position: {
@@ -265,7 +268,7 @@
 								lng: <?php echo $row->lng?>
 							},
 							map: map,
-							url: "<?php echo _route('case:show' , $row->case_id)?>",
+							url: "<?php echo _route('case:show' , $row->id)?>",
 							title: "<?php echo $row->title?>",
 							icon : 'https://caseincident.xyz/public/uploads/map-icons/icon_warning.png'
 						});
