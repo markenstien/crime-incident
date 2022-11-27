@@ -104,10 +104,10 @@
                 $icon = 'fa-check-circle';
         }
 
-        if( !is_null($text) )
+        if(!is_null($text))
             $a_text = $text;
 
-        if( !is_null($color) )
+        if(!is_null($color))
             $a_color = 'danger';
 
         return <<<EOF

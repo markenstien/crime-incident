@@ -96,11 +96,10 @@
 						<div class="table-responsive">
 							<table class="table table-bordered">
 								<tr>
-									<td>Period</td>
+									<td style="width: 30%;">Period</td>
 									<td>
 										<div>From : <?php echo $_GET['start_date']?></div>
 										<div>To : <?php echo $_GET['end_date']?></div>
-										
 										<?php if(!empty($_GET['start_time']) && !empty($_GET['end_time'])) :?>
 											<div>Time From : <?php echo $_GET['start_time']?></div>
 											<div>Time To : <?php echo $_GET['end_time']?></div>
@@ -108,19 +107,19 @@
 									</td>
 								</tr>
 								<tr>
-									<td>Map Type</td>
+									<td style="width: 30%;">Map Type</td>
 									<td><?php echo $_GET['map_type']?></td>
 								</tr>
 								<tr>
-									<td>Total Number Of Cases: </td>
+									<td style="width: 30%;">Total Number Of Cases: </td>
 									<td><?php echo $generalSummary['totalNumberOfCase']?></td>
 								</tr>
 								<tr>
-									<td>
+									<td style="width: 30%;">
 										Crimes Types 
 										<ul>
 											<?php foreach($generalSummary['data']['crimeTypes'] as $key => $row) :?>
-												<li><?php echo $row['name'] .' - ('. $row['total'] .')'?></li>
+												<li><?php echo '('. $row['total'] .') - '. $row['name'] ?></li>
 											<?php endforeach?>
 										</ul>
 									</td>

@@ -47,7 +47,6 @@ License: For each use you must have a valid license purchased only from above li
 <!-- End layout styles -->
 
 <link rel="shortcut icon" href="<?php echo _path_tmp('assets/images/favicon.png')?>" />
-
   <?php produce('headers')?>
   <?php produce('styles')?>
   

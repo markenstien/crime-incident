@@ -14,13 +14,18 @@
 
 		public function __construct()
 		{
-			// $this->request = $_REQUEST;
+			$this->request = $_REQUEST;
 			$this->method  = $_SERVER['REQUEST_METHOD'];
 
 			$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";;
 			$url_components = parse_url($url);
-			parse_str($url_components['query'], $url);
-			$this->request = $url;
+
+			// if (isset($url_components['query'])) {
+			// 	parse_str($url_components['query'], $url);
+			// 	$this->request = $url;
+			// } else {
+			// 	dump($_REQUEST);
+			// }
 
 			$this->runTimeVars = [
 				'url' , 'csrftoken' , 'phpsessid' , '_kdk_supa_cookie_dataprivacy',

@@ -121,7 +121,7 @@
                 if(is_array($row->people)) {
                     foreach($row->people as $peopleKey => $people) {
                         if(isEqual($people->people_type, UserService::VICTIM)) {
-                            if(isEqual($people->people_type, UserService::FEMALE)) {
+                            if(isEqual($people->gender, UserService::FEMALE)) {
                                 $retVal['peopleInvolved']['victims']['female']++;
                             }else{
                                 $retVal['peopleInvolved']['victims']['male']++;
@@ -129,7 +129,7 @@
                             $retVal['peopleInvolved']['victims']['total']++;
                         }else{
                             $retVal['peopleInvolved']['suspects']['total']++;
-                            if(isEqual($people->people_type, UserService::FEMALE)) {
+                            if(isEqual($people->gender, UserService::FEMALE)) {
                                 $retVal['peopleInvolved']['suspects']['female']++;
                             }else{
                                 $retVal['peopleInvolved']['suspects']['male']++;
@@ -139,6 +139,10 @@
                     }
                 }
             }
+
+            $total = array_column($tmpHolder['crimeTypes'], 'total');
+            array_multisort($total, SORT_DESC, $tmpHolder['crimeTypes']);
+
 
             $retVal['totalNumberOfCase'] = count($cases);
             $retVal['totalNumberOfCrimeType'] = count($tmpHolder['crimeTypes']);
@@ -300,7 +304,7 @@
                     $timeSets['6:00am']['items'][] = $row;
                 }elseif($time >= strtotime('12:00pm') && $time <= strtotime('6:00pm')) {
                     $timeSets['12:00pm']['items'][] = $row;
-                }elseif($time >= strtotime('6:00pm') && $time <= strtotime('12:00am')) {
+                }elseif($time >= strtotime('6:00pm') && $time >= strtotime('12:00am')) {
                     $timeSets['6:00pm']['items'][] = $row;
                 }elseif($time >= strtotime('12:00am') && $time <= strtotime('3:00am')) {
                     $timeSets['12:00am']['items'][] = $row;
