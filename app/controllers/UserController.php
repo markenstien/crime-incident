@@ -62,6 +62,9 @@
 				$res = $this->model->update($post , $post['id']);
 
 				if($res) {
+					if (!upload_empty('profile')) {
+						$this->model->uploadProfile('profile', $post['id']);
+					}
 					Flash::set( $this->model->getMessageString());
 					return redirect( _route('user:show' , $id) );
 				}else
