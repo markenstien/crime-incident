@@ -50,7 +50,8 @@
 				if(empty($fillable_datas['password']) )
 					unset($fillable_datas['password']);
 				$res = parent::update($fillable_datas , $id);
-				if( isset($user_data['profile']) ){
+
+				if(isset($user_data['profile'])){
 					$this->uploadProfile('profile' , $id);
 				}
 				$user_id = $id;
@@ -161,6 +162,7 @@
 
 			if($res) {
 				$this->addMessage("Profile uploaded!");
+				$this->startAuth($id);
 				return true;
 			}
 			$this->addError("UPLOAD PROFILE DATABASE ERROR");
