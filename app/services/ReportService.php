@@ -12,7 +12,7 @@
         {
             $this->caseModel = $caseModel;
         }
-        public function generate($startDate, $endDate, $stationId = null, $barangayId = null, $crimeTypes = []) {
+        public function generate($startDate, $endDate, $stationId = null, $barangayId = null, $crimeType = '') {
 
             $condition = [
                 'incident_date' => [
@@ -30,11 +30,9 @@
             if (!is_null($barangayId) && !empty($barangayId)) {
                 $condition['barangay_id'] = $barangayId;
             }
-            if(!empty($crimeTypes)) {
-                $condition['crime_type_id'] = [
-                    'condition' => 'in',
-                    'value' => $crimeTypes
-                ];
+
+            if (!empty($crimeType)) {
+                $condition['crime_type_id'] = $crimeType;
             }
 
             $cases = $this->caseModel->getAll([
